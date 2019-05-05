@@ -192,9 +192,6 @@ func (Go) Format() error {
 func (Go) Import() error {
 	color.Cyan("## Process imports")
 	args := []string{"-w"}
-	if len(goSrcFiles) == 0 {
-		return nil
-	}
 	args = append(args, goSrcFiles...)
 	return sh.RunV("goreturns", args...)
 }
@@ -243,6 +240,9 @@ func getGoFiles() []string {
 		if strings.Contains(path, "vendor/") {
 			return filepath.SkipDir
 		}
+		if strings.Contains(path, "tools/") {
+			return filepath.SkipDir
+		}
 
 		if !strings.HasSuffix(path, ".go") {
 			return nil
@@ -259,7 +259,7 @@ func getGoSrcFiles() []string {
 	var goSrcFiles []string
 
 	for _, path := range goFiles {
-		if !strings.HasSuffix(path, "_test.go") {
+		if strings.HasSuffix(path, "_test.go") {
 			continue
 		}
 

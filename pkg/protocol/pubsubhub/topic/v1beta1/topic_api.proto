@@ -22,7 +22,7 @@
 
 syntax = "proto3";
 
-package hub.pubsub.v1;
+package pubsubhub.topic.v1beta1;
 
 option (gogoproto.benchgen_all) = true;
 option (gogoproto.equal_all) = true;
@@ -31,14 +31,31 @@ option (gogoproto.populate_all) = true;
 option (gogoproto.sizer_all) = true;
 option (gogoproto.testgen_all) = true;
 option (gogoproto.unmarshaler_all) = true;
-option csharp_namespace = "Hub.Pubsub.V1Aplha1";
-option go_package = "hub/pubsub/v1alpha1;pubsubv1alpha1";
+option csharp_namespace = "Pubsubhub.Topic.V1Beta1";
+option go_package = "topicv1beta1";
 option java_multiple_files = true;
-option java_outer_classname = "PubsubProto";
-option java_package = "org.zenithar.hub.pubsub.v1alpha1";
-option objc_class_prefix = "HPX";
-option php_namespace = "Hub\\Pubsub\\V1alpha1";
+option java_outer_classname = "TopicApiProto";
+option java_package = "org.zenithar.pubsubhub.topic.v1beta1";
+option objc_class_prefix = "PTX";
+option php_namespace = "Pubsubhub\\Topic\\V1Beta1";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "pkg/protocol/pubsubhub/topic/v1beta1/topic.proto";
 
 // -----------------------------------------------------------------------------
+
+// Topic API declares topic management service contract.
+service TopicAPI {
+    // Create a topic.
+    rpc Create(CreateRequest) returns (CreateResponse);
+}
+
+// CreateTopicRequest is the request object for topic registration.
+message CreateRequest {
+    string name = 1;
+}
+
+// CreateTopicResponse is the response of a topic registration.
+message CreateResponse {
+    Topic entity = 1;
+}

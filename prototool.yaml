@@ -17,9 +17,10 @@ protoc:
   allow_unused_imports: false
 
 lint:
-  group: google
+  group: uber2
   file_header:
     path: LICENSE
+  java_package_prefix: org.zenithar
 
 generate:
   go_options:
@@ -28,14 +29,14 @@ generate:
     - name: gogo
       type: gogo
       flags: plugins=grpc
-      output: ./pkg/gen/go
+      output: .
     - name: validate
       type: gogo
       flags: lang=gogo
-      output: ./pkg/gen/go
+      output: .
     - name: cobra
       type: gogo
-      output: ./pkg/gen/go
+      output: .
     - name: mock
       type: gogo
-      output: ./pkg/gen/go
+      output: .
