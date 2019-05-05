@@ -1,4 +1,4 @@
-module go.zenithar.org/spotigraph/tools
+module go.zenithar.org/pubsubhub/tools
 
 go 1.12
 
