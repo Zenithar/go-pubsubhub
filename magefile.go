@@ -117,23 +117,8 @@ func (Gen) Migrations() {
 // Generate protobuf
 func (Gen) Protobuf() error {
 	color.Blue("### Protobuf")
-	mg.SerialDeps(Prototool.Lint)
 
-	return sh.RunV("prototool", "generate")
-}
-
-// -----------------------------------------------------------------------------
-
-type Prototool mg.Namespace
-
-func (Prototool) Lint() error {
-	fmt.Println("#### Lint protobuf")
-	return sh.RunV("prototool", "lint")
-}
-
-func (Prototool) Format() error {
-	fmt.Println("#### Format protobuf")
-	return sh.RunV("prototool", "format")
+	return sh.RunV("prototool", "all", "--fix", "pkg/protocol")
 }
 
 // -----------------------------------------------------------------------------

@@ -22,43 +22,37 @@
 
 syntax = "proto3";
 
-package pubsubhub.topic.v1beta1;
+package pubsubhub.rpc.v1;
 
 option (gogoproto.equal_all) = true;
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.populate_all) = true;
 option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
-option csharp_namespace = "Pubsubhub.Topic.V1Beta1";
-option go_package = "topicv1beta1";
+option csharp_namespace = "Pubsubhub.Rpc.V1";
+option go_package = "rpcv1";
 option java_multiple_files = true;
-option java_outer_classname = "TopicProto";
-option java_package = "org.zenithar.pubsubhub.topic.v1beta1";
-option objc_class_prefix = "PTX";
-option php_namespace = "Pubsubhub\\Topic\\V1Beta1";
+option java_outer_classname = "StatusProto";
+option java_package = "org.zenithar.pubsubhub.rpc.v1";
+option objc_class_prefix = "PRX";
+option php_namespace = "Pubsubhub\\Rpc\\V1";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
 
 // -----------------------------------------------------------------------------
 
-// Message is the enveloppe that contains the payload to publish or subscribe
-// to/from a topic.
-message Message {
-  // Payload data
-  bytes payload = 1;
-  // Key/value for additional attributes (headers, etc.)
-  map<string, string> attributes = 2;
-  // ID
-  string message_id = 3;
-  // The time when the message was published.
-  google.protobuf.Timestamp publish_time = 4;
-}
-
-// A topic is a virtual element that have subscribers and publishers.
-message Topic {
-  // Name of the topic.
-  string name = 1;
-  // Annotations or labels appliyed to this topic
-  map<string, string> labels = 2;
+// Status repesents operation status response.
+message Status {
+  // The status code, which should be an enum value of
+  // [pubsubhub.system.v1.Code][pubsubhub.system.v1.Code].
+  int32 code = 1;
+  // A developer-facing error message, which should be in English. Any
+  // user-facing error message should be localized and sent in the
+  // [pubsubhub.system.v1.Status.details][pubsubhub.system.v1.Status.details] field, or localized
+  // by the client.
+  string message = 2;
+  // A list of messages that carry the error details.  There is a common set of
+  // message types for APIs to use.
+  repeated google.protobuf.Any details = 3;
 }

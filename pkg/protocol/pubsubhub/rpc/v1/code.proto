@@ -22,43 +22,58 @@
 
 syntax = "proto3";
 
-package pubsubhub.topic.v1beta1;
+package pubsubhub.rpc.v1;
 
 option (gogoproto.equal_all) = true;
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.populate_all) = true;
 option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
-option csharp_namespace = "Pubsubhub.Topic.V1Beta1";
-option go_package = "topicv1beta1";
+option csharp_namespace = "Pubsubhub.Rpc.V1";
+option go_package = "rpcv1";
 option java_multiple_files = true;
-option java_outer_classname = "TopicProto";
-option java_package = "org.zenithar.pubsubhub.topic.v1beta1";
-option objc_class_prefix = "PTX";
-option php_namespace = "Pubsubhub\\Topic\\V1Beta1";
+option java_outer_classname = "CodeProto";
+option java_package = "org.zenithar.pubsubhub.rpc.v1";
+option objc_class_prefix = "PRX";
+option php_namespace = "Pubsubhub\\Rpc\\V1";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "google/protobuf/timestamp.proto";
 
 // -----------------------------------------------------------------------------
 
-// Message is the enveloppe that contains the payload to publish or subscribe
-// to/from a topic.
-message Message {
-  // Payload data
-  bytes payload = 1;
-  // Key/value for additional attributes (headers, etc.)
-  map<string, string> attributes = 2;
-  // ID
-  string message_id = 3;
-  // The time when the message was published.
-  google.protobuf.Timestamp publish_time = 4;
-}
-
-// A topic is a virtual element that have subscribers and publishers.
-message Topic {
-  // Name of the topic.
-  string name = 1;
-  // Annotations or labels appliyed to this topic
-  map<string, string> labels = 2;
+// Code defines status codes.
+enum Code {
+  CODE_INVALID = 0;
+  // HTTP Mapping: 200 OK
+  CODE_OK = 1;
+  // HTTP Mapping: 499 Client Closed Request
+  CODE_CANCELLED = 2;
+  // HTTP Mapping: 500 Internal Server Error
+  CODE_UNKNOWN = 3;
+  // HTTP Mapping: 400 Bad Request
+  CODE_INVALID_ARGUMENT = 4;
+  // HTTP Mapping: 504 Gateway Timeout
+  CODE_DEADLINE_EXCEEDED = 5;
+  // HTTP Mapping: 404 Not Found
+  CODE_NOT_FOUND = 6;
+  // HTTP Mapping: 409 Conflict
+  CODE_ALREADY_EXISTS = 7;
+  // HTTP Mapping: 403 Forbidden
+  CODE_PERMISSION_DENIED = 8;
+  // HTTP Mapping: 401 Unauthorized
+  CODE_UNAUTHENTICATED = 9;
+  // HTTP Mapping: 429 Too Many Requests
+  CODE_RESOURCE_EXHAUSTED = 10;
+  // HTTP Mapping: 412 Precondition Failed
+  CODE_FAILED_PRECONDITION = 11;
+  // HTTP Mapping: 409 Conflict
+  CODE_ABORTED = 12;
+  // HTTP Mapping: 400 Bad Request
+  CODE_OUT_OF_RANGE = 13;
+  // HTTP Mapping: 501 Not Implemented
+  CODE_UNIMPLEMENTED = 14;
+  // HTTP Mapping: 500 Internal Server Error
+  CODE_INTERNAL = 15;
+  // HTTP Mapping: 503 Service Unavailable
+  CODE_UNAVAILABLE = 16;
 }

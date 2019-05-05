@@ -24,12 +24,10 @@ syntax = "proto3";
 
 package pubsubhub.topic.v1beta1;
 
-option (gogoproto.benchgen_all) = true;
 option (gogoproto.equal_all) = true;
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.populate_all) = true;
 option (gogoproto.sizer_all) = true;
-option (gogoproto.testgen_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 option csharp_namespace = "Pubsubhub.Topic.V1Beta1";
 option go_package = "topicv1beta1";
@@ -40,22 +38,100 @@ option objc_class_prefix = "PTX";
 option php_namespace = "Pubsubhub\\Topic\\V1Beta1";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "pkg/protocol/pubsubhub/topic/v1beta1/topic.proto";
+import "google/protobuf/field_mask.proto";
+import "pubsubhub/topic/v1beta1/topic.proto";
 
 // -----------------------------------------------------------------------------
 
 // Topic API declares topic management service contract.
 service TopicAPI {
-    // Create a topic.
-    rpc Create(CreateRequest) returns (CreateResponse);
+  // List accessible topics.
+  rpc List(ListRequest) returns (ListResponse);
+  // Create a topic.
+  rpc Create(CreateRequest) returns (CreateResponse);
+  // Get a topic by name.
+  rpc Get(GetRequest) returns (GetResponse);
+  // Update a topic.
+  rpc Update(UpdateRequest) returns (UpdateResponse);
+  // Publish a message to the topic.
+  rpc Publish(PublishRequest) returns (PublishResponse);
+  // Subscribe to a topic.
+  rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse);
+}
+
+// ListRequest is used to request accessible topice for authenticated identity
+message ListRequest {
+  // Maximum number of topics to return.
+  int32 page_size = 1;
+  // The value returned by the last `ListResponse`; indicates that this is
+  // a continuation of a prior `List` call, and that the system should
+  // return the next page of data.
+  string page_token = 2;
+}
+
+message ListResponse {
+  // List of topics that match the request
+  repeated Topic topics = 1;
+  // If not empty, indicates that there may be more topics that match the
+  // request; this value should be passed in a new `ListRequest`.
+  string next_page_token = 2;
 }
 
 // CreateTopicRequest is the request object for topic registration.
 message CreateRequest {
-    string name = 1;
+  // Topic has only a name
+  string name = 1;
 }
 
 // CreateTopicResponse is the response of a topic registration.
 message CreateResponse {
-    Topic entity = 1;
+  // Topic properties
+  Topic entity = 1;
+}
+
+message GetRequest {
+  // Get a topic by name
+  string name = 1;
+}
+
+message GetResponse {
+  // Topic properties
+  Topic entity = 1;
+}
+
+message UpdateRequest {
+  // Indicate which topic to update.
+  Topic topic = 1;
+  // Indicates which fields in the provided topic to update.
+  // Must be specified and non-empty.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message UpdateResponse {
+  // Updated topic properties
+  Topic entity = 2;
+}
+
+message PublishRequest {
+  // Topic to publish message to
+  string topic = 1;
+  // List of messages to publish
+  repeated Message messages = 2;
+}
+
+message PublishResponse {
+  // List of message ids
+  repeated string message_ids = 1;
+}
+
+message SubscribeRequest {
+  // Topic to subscribe
+  string topic = 1;
+}
+
+message SubscribeResponse {
+  // Topic to subscribe
+  string topic = 1;
+  // Message received in the subscription
+  Message message = 2;
 }
