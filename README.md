@@ -1,2 +1,3 @@
 # go-pubsubhub
-Publish / Subscribe microservice 
+
+Lightweight messaging Publish / Subscribe microservice based on gRPC.

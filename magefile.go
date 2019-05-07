@@ -190,6 +190,27 @@ func (Go) Lint() error {
 
 // -----------------------------------------------------------------------------
 
+type Docker mg.Namespace
+
+// Build docker image.
+func (Docker) Build() error {
+	color.Red("# Docker -------------------------------------------------------------------")
+	fmt.Printf("BUILD_DATE : %s\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("VERSION : %s\n", tag())
+	fmt.Printf("VCS_REF : %s\n", hash())
+
+	fmt.Printf(" > Production image\n")
+	return sh.RunV("docker", "build",
+		"-f", "deployment/docker/Dockerfile",
+		"--build-arg", fmt.Sprintf("BUILD_DATE=%s"),
+		"--build-arg", fmt.Sprintf("VERSION=%s", tag()),
+		"--build-arg", fmt.Sprintf("VCS_REF=%s", hash()),
+		"-t", "pubsubhub:latest",
+		".")
+}
+
+// -----------------------------------------------------------------------------
+
 type Bin mg.Namespace
 
 func (Bin) PubSubHub() error {
@@ -207,13 +228,15 @@ func goBuild(packageName, out string) error {
 		"go.zenithar.org/pubsubhub/internal/version.BuildDate": time.Now().Format(time.RFC3339),
 		"go.zenithar.org/pubsubhub/internal/version.GoVersion": runtime.Version(),
 	}
-	var linkerArgs string
+	var linkerArgs []string
 	for name, value := range varsSetByLinker {
-		linkerArgs += fmt.Sprintf(" -X %s=%s", name, value)
+		linkerArgs = append(linkerArgs, "-X", fmt.Sprintf("%s=%s", name, value))
 	}
-	linkerArgs = fmt.Sprintf("-s -w %s -extldflags=-Wl,-z,now,-z,relro", linkerArgs)
+	linkerArgs = append(linkerArgs, "-s", "-w")
 
-	return sh.Run("go", "build", "-buildmode=pie", "-ldflags", linkerArgs, "-o", fmt.Sprintf("bin/%s", out), packageName)
+	return sh.RunWith(map[string]string{
+		"CGO_ENABLED": "0",
+	}, "go", "build", "-ldflags", strings.Join(linkerArgs, " "), "-o", fmt.Sprintf("bin/%s", out), packageName)
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +267,7 @@ func getGoSrcFiles() []string {
 	var goSrcFiles []string
 
 	for _, path := range goFiles {
-		if strings.HasSuffix(path, "_test.go") {
+		if !strings.HasSuffix(path, "_test.go") {
 			continue
 		}
 
