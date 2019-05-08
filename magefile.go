@@ -95,8 +95,8 @@ func (Gen) Wire() {
 func (Gen) Mocks() {
 	color.Blue("### Mocks")
 
-	// mustGoGenerate("Repositories", "go.zenithar.org/spotigraph/internal/repositories")
-	// mustGoGenerate("Services", "go.zenithar.org/spotigraph/internal/services")
+	mustGoGenerate("Repositories", "go.zenithar.org/pubsubhub/internal/repositories")
+	// mustGoGenerate("Services", "go.zenithar.org/pubsubhub/internal/services")
 }
 
 // Generate mocks for tests
@@ -111,7 +111,7 @@ func (Gen) Decorators() {
 func (Gen) Migrations() {
 	color.Blue("### Database migrations")
 
-	// mustGoGenerate("PostgreSQL", "go.zenithar.org/spotigraph/internal/repositories/pkg/postgresql")
+	mustGoGenerate("PostgreSQL", "go.zenithar.org/pubsubhub/internal/repositories/pkg/postgresql")
 }
 
 // Generate protobuf
